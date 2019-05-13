@@ -65,13 +65,7 @@ const target = {
 
 // Add a click handler to the img element
 fullMap.addEventListener('click', function (event) {
-    clicks++;
-    // Check if click limit over the clicks gets game over
-    if (clicks === clickLimit) {
-        dstanse.remove();
-        // styling the game over announce text
-        setMessage(`Game over! you lost the game with ${clicks} clicks!`, 'red', '2rem');
-    }
+
     // Get distance between click event and target
     let distance = getDistance(event, target);
     // Convert distance to a hint
@@ -79,12 +73,28 @@ fullMap.addEventListener('click', function (event) {
     // Update the #distance element with the new hint
     dstanse.textContent = distanceHint;
 
-    // Id the click was close enough, tell them they won
+    // If the click was close enough, tell them they won
     if (distance < 8) {
+        // Disable hint msg
         dstanse.remove();
         // styling the announce text
         setMessage(`Yee! You found the treasure in ${clicks} clicks!`, 'red', '2rem');
+        // Disable map and win msg
+        fullMap.remove();
+    } else {
+        // Check if click limit over the clicks gets game over
+        if (clicks === clickLimit) {
+            dstanse.remove();
+            // styling the gameover announce text
+            setMessage(`Game over! you lost the game with ${clicks} clicks!`, 'red', '2rem');
+            return;
+        } else {
+            // initialize a variable that store how many clicks left
+            let clicksLeft = clickLimit - clicks;
+            setMessage(`You have ${clicksLeft} clicks left`, 'red');
+        }
     }
+    clicks++;
     event.preventDefault();
 })
 // play again event listner
@@ -93,7 +103,7 @@ playAgain.addEventListener('click', function (e) {
     e.preventDefault();
 })
 
-
+// show display msg, color and fontSize
 function setMessage(msg, color, fontSize) {
     declareWin.style.fontSize = fontSize;
     declareWin.style.color = color;
